@@ -1,11 +1,14 @@
-# Stripe billing audit examples
+# CloakMotion highlights
 
-Two small fixes from a security and payment audit of CloakMotion, a multi-tenant AI video SaaS I built (Laravel 10 API, Cashier, Next.js frontend).
-These are excerpts, not a runnable app. The full write-up is on my portfolio site.
+Excerpts from CloakMotion, a multi-tenant AI video SaaS I built (Laravel 10 API with Cashier, a Next.js frontend and a separate
+Python FastAPI service that does the video work). The full repo is private; these are the parts the blog posts talk about.
+They are excerpts, not a runnable app.
 
-| File | Problem found | Fix |
+| Folder | What it shows | Blog post |
 |---|---|---|
-| `webhook_secret_guard.php` | The Stripe webhook accepts forged events if `STRIPE_WEBHOOK_SECRET` is not set | The app refuses to boot in production without it |
-| `restricted_portal_config.php` | A plan change in the Stripe portal created a subscription with no plan name, so a paying customer was treated as free | The portal is created with plan changes disabled; plan changes go through the app's own endpoint |
+| `stripe/` | A webhook guard that refuses to boot without `STRIPE_WEBHOOK_SECRET`, and a Stripe billing portal configured so a plan change cannot downgrade a paying user | [Two Stripe bugs I found auditing my own SaaS](https://hassanabbas.net/blog/stripe-webhooks-and-portal.html) |
+| `gating/` | A free plan that cannot render: the server checks for an active subscription before any paid action | [A free tier that can't spend your AI budget](https://hassanabbas.net/blog/free-tier-that-cannot-spend.html) |
+| `video-service/` | Timeouts on every outbound call and ffmpeg command, routes that do not block the event loop, and a failed GPT call handled before it is used | [Making a video service fail properly](https://hassanabbas.net/blog/video-service-timeouts.html) |
 
-CloakMotion has no automated test suite and is not deployed publicly.
+CloakMotion has no automated test suite and is not deployed publicly. It runs locally in Docker and is shown through a recorded
+walkthrough in my Upwork portfolio.
